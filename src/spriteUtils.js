@@ -58,6 +58,19 @@ function createConfig(svgList, svgoConfig = true) {
       },
     },
     svg: {
+
+      namespaceClassnames: false,
+      namespaceIDs: false,
+      transform: [
+        (svg) => {
+          let globalDefs = '';
+
+          return svg
+            .replace(/<defs>(.+?)<\/defs>/g, (_match, def) => { globalDefs += def; return '' })
+            .replace('<symbol', `<defs>${globalDefs}</defs><symbol`);
+        },
+      ],
+
       rootAttributes: {
         'aria-hidden': "true"
       }

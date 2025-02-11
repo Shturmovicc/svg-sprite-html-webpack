@@ -43,6 +43,7 @@ module.exports = class SvgSpriteHtmlWebpackPlugin {
     this.svgList = [];
     this.lastCompiledList = this.svgList;
     this.svgSprite = '';
+    this.svgoConfig = options.svgoConfig
 
     if (options.includeFiles) {
       this.importFiles(options.includeFiles);
@@ -270,7 +271,7 @@ module.exports = class SvgSpriteHtmlWebpackPlugin {
     const svgListChanged = this.svgList !== this.lastCompiledList;
 
     if (svgListChanged) {
-      createSprite(this.svgList)
+      createSprite(this.svgList, this.svgoConfig)
         .then((svgSprite) => {
           this.lastCompiledList = this.svgList;
           this.svgSprite = svgSprite;

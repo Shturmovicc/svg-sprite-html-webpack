@@ -34,14 +34,23 @@ function createIdGenerator(svgList) {
  * @param {number} svgList.hash
  * @param {string} svgList.path
  * @param {string} svgList.content
+ * @param {object | bool} [svgoConfig=true] - SVGO config to use during transformation.
  * @return {Promise} promise with svg sprite string
  */
-function createConfig(svgList) {
+function createConfig(svgList, svgoConfig = true) {
+  let transform
+  if (svgoConfig === true) {
+    transform = ['svgo']
+  } else if (typeof svgoConfig === 'object') {
+    transform = [{ svgo: svgoConfig }]
+  }
+
   return {
     shape: {
       id: {
         generator: createIdGenerator(svgList),
       },
+      transform: transform || []
     },
     mode: {
       symbol: {
@@ -99,10 +108,11 @@ function compileSprite(spriter) {
  * @param {number} svgList.hash
  * @param {string} svgList.path
  * @param {string} svgList.content
+ * @param {object | bool} [svgoConfig=true] - SVGO config to use during transformation.
  * @return {Promise} promise with svg sprite string
  */
-function createSprite(svgList) {
-  const spritterConfig = createConfig(svgList);
+function createSprite(svgList, svgoConfig = true) {
+  const spritterConfig = createConfig(svgList, svgoConfig);
   const spritter = new SVGSpriter(spritterConfig);
 
   svgList.map(addFileInSpriter(spritter));
